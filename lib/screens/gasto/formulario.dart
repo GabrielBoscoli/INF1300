@@ -1,4 +1,5 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/components/seletor_categoria.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,6 @@ class FormularioGastoState extends State<FormularioGasto> {
   final TextEditingController _controladorCampoCategoria =
       TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
-  final Color _defaultColor = Colors.redAccent;
-  final List<Categoria> _categorias = [
-    Categoria('Bebida', Colors.red),
-    Categoria('Comida', Colors.blue),
-    Categoria('Carro', Colors.green),
-  ];
-  String? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -34,47 +28,7 @@ class FormularioGastoState extends State<FormularioGasto> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Row(
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButtonFormField<String>(
-                            style: const TextStyle(fontSize: 24.0),
-                            items: _categorias.map((categoria) {
-                              return DropdownMenuItem<String>(
-                                  value: categoria.name,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(categoria.name),
-                                  ));
-                            }).toList(),
-                            onChanged: (categoria) {
-                              setState(() {
-                                dropdownValue = categoria!;
-                              });
-                            },
-                            value: dropdownValue,
-                            isExpanded: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Categoria',
-                              labelStyle: const TextStyle(fontSize: 24.0),
-                              alignLabelWithHint: true,
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ColorIndicator(HSVColor.fromColor(_defaultColor)),
-                  ),
-                ],
-              ),
+              SeletorCategoria(),
               Editor(
                 _controladorCampoValor,
                 'Valor',

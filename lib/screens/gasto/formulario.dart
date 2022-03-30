@@ -40,14 +40,8 @@ class FormularioGastoState extends State<FormularioGasto> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1.5,
-                              color: Theme.of(context).backgroundColor,
-                            ),
-                            borderRadius: const BorderRadius.all(Radius.circular(4.0))),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
+                          child: DropdownButtonFormField<String>(
                             style: const TextStyle(fontSize: 24.0),
                             items: _categorias.map((categoria) {
                               return DropdownMenuItem<String>(
@@ -63,11 +57,13 @@ class FormularioGastoState extends State<FormularioGasto> {
                               });
                             },
                             value: dropdownValue,
-                            hint: const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text('Categoria'),
-                            ),
                             isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Categoria',
+                              labelStyle: const TextStyle(fontSize: 24.0),
+                              alignLabelWithHint: true,
+                              border: OutlineInputBorder(),
+                            ),
                           ),
                         ),
                       ),

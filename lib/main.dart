@@ -6,16 +6,25 @@ class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: ListaGastos(),
-      ),
+      theme: ThemeData.dark(),
+      home: ListaGastos()
     );
   }
 }
 
-class FormularioGasto extends StatelessWidget {
+class FormularioGasto extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return FormularioGastoState();
+  }
+
+}
+
+class FormularioGastoState extends State<FormularioGasto> {
+
   final TextEditingController _controladorCampoNumeroConta =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
 
   @override
@@ -24,24 +33,26 @@ class FormularioGasto extends StatelessWidget {
         appBar: AppBar(
           title: Text('Novo Gasto'),
         ),
-        body: Column(
-          children: <Widget>[
-            Editor(
-              _controladorCampoNumeroConta,
-              'Número da conta',
-              '0000',
-            ),
-            Editor(
-              _controladorCampoValor,
-              'Valor',
-              '0.00',
-              icone: Icons.monetization_on,
-            ),
-            ElevatedButton(
-              child: Text('Confirmar'),
-              onPressed: () => _criaGasto(context),
-            )
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Editor(
+                _controladorCampoNumeroConta,
+                'Número da conta',
+                '0000',
+              ),
+              Editor(
+                _controladorCampoValor,
+                'Valor',
+                '0.00',
+                icone: Icons.monetization_on,
+              ),
+              ElevatedButton(
+                child: Text('Confirmar'),
+                onPressed: () => _criaGasto(context),
+              )
+            ],
+          ),
         ));
   }
 
@@ -83,23 +94,28 @@ class Editor extends StatelessWidget {
   }
 }
 
-class ListaGastos extends StatelessWidget {
-  final List<Gasto> _gastos = [];
+class ListaGastos extends StatefulWidget {
+  final List<Gasto> gastos = [];
+
+  @override
+  State<StatefulWidget> createState() {
+    return ListaGastosState();
+  }
+
+}
+
+class ListaGastosState extends State<ListaGastos> {
 
   @override
   Widget build(BuildContext context) {
-    _gastos.add(Gasto(100.0, 1000, Categorias.BEBIDA));
-    _gastos.add(Gasto(100.0, 1000, Categorias.COMIDA));
-    _gastos.add(Gasto(100.0, 1000, Categorias.FESTA));
-    _gastos.add(Gasto(100.0, 1000, Categorias.GASOLINA));
     return Scaffold(
       appBar: AppBar(
         title: Text('Gastos'),
       ),
       body: ListView.builder(
-        itemCount: _gastos.length,
+        itemCount: widget.gastos.length,
         itemBuilder: (context, indice) {
-          final gasto = _gastos[indice];
+          final gasto = widget.gastos[indice];
           return ItemGasto(gasto);
         },
       ),
@@ -107,14 +123,16 @@ class ListaGastos extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           final Future<Gasto?> future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
             return FormularioGasto();
           }));
           future.then((gastoRecebido) {
             debugPrint('chegou no then do future');
             debugPrint('$gastoRecebido');
             if (gastoRecebido != null) {
-              _gastos.add(gastoRecebido);
+              setState(() {
+                widget.gastos.add(gastoRecebido);
+              });
             }
           });
         },

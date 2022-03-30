@@ -135,9 +135,19 @@ class ItemGasto extends StatelessWidget {
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.monetization_on,
-            size: 40,
+          Row(
+            children: [
+              Icon(
+                Icons.arrow_circle_down_rounded,
+                size: 32,
+                color: Colors.red,
+              ),
+              Icon(
+                Icons.monetization_on_rounded,
+                size: 32,
+              ),
+            ],
+            mainAxisSize: MainAxisSize.min,
           ),
         ],
       ),

@@ -9,6 +9,8 @@ class SeletorCategoria extends StatefulWidget {
     Categoria('Carro', Colors.green),
   ];
 
+  SeletorCategoria({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return SeletorCategoriaState();
@@ -16,7 +18,8 @@ class SeletorCategoria extends StatefulWidget {
 }
 
 class SeletorCategoriaState extends State<SeletorCategoria> {
-  String? dropdownValue;
+  Categoria? dropdownValue;
+  late Color selectedColor = Theme.of(context).scaffoldBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +29,24 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: DropdownButtonHideUnderline(
-              child: DropdownButtonFormField<String>(
+              child: DropdownButtonFormField<Categoria>(
+                value: dropdownValue,
                 style: const TextStyle(fontSize: 24.0),
                 items: widget.categorias.map((categoria) {
-                  return DropdownMenuItem<String>(
-                      value: categoria.name,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(categoria.name),
-                      ));
+                  return DropdownMenuItem<Categoria>(
+                    value: categoria,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(categoria.name),
+                    ),
+                  );
                 }).toList(),
                 onChanged: (categoria) {
                   setState(() {
                     dropdownValue = categoria!;
+                    selectedColor = categoria.color;
                   });
                 },
-                value: dropdownValue,
                 isExpanded: true,
                 decoration: const InputDecoration(
                   labelText: 'Categoria',
@@ -55,7 +60,7 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ColorIndicator(HSVColor.fromColor(Theme.of(context).scaffoldBackgroundColor)),
+          child: ColorIndicator(HSVColor.fromColor(selectedColor)),
         ),
       ],
     );

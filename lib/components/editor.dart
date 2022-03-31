@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-/**
- * Classe que representa um campo de input de texto.
- */
+/// Classe que representa um campo de input de texto.
 class Editor extends StatelessWidget {
   final TextEditingController controlador;
   final String rotulo;
   final String dica;
   final IconData? icone;
   final int? maxLines;
+  final TextInputType? textInputType;
 
-  Editor(this.controlador, this.rotulo, this.dica, {this.icone, this.maxLines});
+  const Editor(this.controlador, this.rotulo, this.dica,
+      {this.icone, this.maxLines, this.textInputType});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class Editor extends StatelessWidget {
           alignLabelWithHint: true,
           border: const OutlineInputBorder(),
         ),
-        keyboardType: TextInputType.number,
+        keyboardType: textInputType ?? TextInputType.text,
         maxLines: maxLines,
       ),
     );

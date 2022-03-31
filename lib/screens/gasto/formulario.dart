@@ -22,38 +22,40 @@ class FormularioGastoState extends State<FormularioGasto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Novo Gasto'),
+      appBar: AppBar(
+        title: const Text('Novo Gasto'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SeletorCategoria(),
+            Editor(
+              _controladorCampoValor,
+              'Valor',
+              '0.00',
+              icone: Icons.monetization_on,
+              textInputType: TextInputType.number,
+            ),
+            Editor(
+              _controladorCampoCategoria,
+              'Descrição',
+              'Breve descrição do gasto.',
+              maxLines: 5,
+            ),
+            // MaterialPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
+            // MultipleChoiceBlockPicker(pickerColors: const [Color(0xFFFFFFFF)], onColorsChanged: (color) {}, useInShowDialog: true,),
+            // ColorPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
+            // ColorPickerLabel(HSVColor.fromColor(const Color(0xFFFFFFFF))),
+            // BlockPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
+            // ColorIndicator(HSVColor.fromColor(const Color(0xFFFFFFFF))),
+            ElevatedButton(
+              child: const Text('Confirmar'),
+              onPressed: () => _criaGasto(context),
+            )
+          ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SeletorCategoria(),
-              Editor(
-                _controladorCampoValor,
-                'Valor',
-                '0.00',
-                icone: Icons.monetization_on,
-              ),
-              Editor(
-                _controladorCampoCategoria,
-                'Descrição',
-                'Breve descrição do gasto.',
-                maxLines: 5,
-              ),
-              // MaterialPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-              // MultipleChoiceBlockPicker(pickerColors: const [Color(0xFFFFFFFF)], onColorsChanged: (color) {}, useInShowDialog: true,),
-              // ColorPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-              // ColorPickerLabel(HSVColor.fromColor(const Color(0xFFFFFFFF))),
-              // BlockPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-              // ColorIndicator(HSVColor.fromColor(const Color(0xFFFFFFFF))),
-              ElevatedButton(
-                child: const Text('Confirmar'),
-                onPressed: () => _criaGasto(context),
-              )
-            ],
-          ),
-        ));
+      ),
+    );
   }
 
   void _criaGasto(BuildContext context) {

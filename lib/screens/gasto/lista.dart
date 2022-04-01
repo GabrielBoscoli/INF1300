@@ -1,7 +1,7 @@
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';
 
-import 'formulario.dart';
+import 'novo_gasto.dart';
 import 'item.dart';
 
 class ListaGastos extends StatefulWidget {

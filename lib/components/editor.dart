@@ -8,15 +8,18 @@ class Editor extends StatelessWidget {
   final IconData? icone;
   final int? maxLines;
   final TextInputType? textInputType;
+  final bool readOnly;
+  final Function? onTapCallback;
 
   const Editor(this.controlador, this.rotulo, this.dica,
-      {this.icone, this.maxLines, this.textInputType});
+      {this.icone, this.maxLines, this.textInputType, this.readOnly = false, this.onTapCallback});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: TextField(
+        readOnly: readOnly,
         controller: controlador,
         style: const TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
@@ -28,6 +31,7 @@ class Editor extends StatelessWidget {
         ),
         keyboardType: textInputType ?? TextInputType.text,
         maxLines: maxLines,
+        onTap: onTapCallback != null ? () => onTapCallback!() : null,
       ),
     );
   }

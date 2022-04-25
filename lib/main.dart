@@ -1,5 +1,5 @@
 import 'package:bytebank/screens/gasto/lista.dart';
-import 'package:bytebank/screens/gasto/nova_categoria.dart';
+import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(BytebankApp());

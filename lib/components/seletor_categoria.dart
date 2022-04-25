@@ -1,5 +1,5 @@
 import 'package:bytebank/models/categoria.dart';
-import 'package:bytebank/screens/gasto/nova_categoria.dart';
+import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -9,8 +9,9 @@ class SeletorCategoria extends StatefulWidget {
     Categoria('Comida', Colors.blue),
     Categoria('Carro', Colors.green),
   ];
+  final Function _onChangedCallback;
 
-  SeletorCategoria({Key? key}) : super(key: key);
+  SeletorCategoria(this._onChangedCallback, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -46,7 +47,10 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
                       );
                     }).toList(),
                     onChanged: (categoria) {
-                      setState(() => _atualizaSeletor(categoria));
+                      setState(()  {
+                        _atualizaSeletor(categoria);
+                        widget._onChangedCallback(categoria);
+                      });
                     },
                     isExpanded: true,
                     decoration: const InputDecoration(
@@ -77,6 +81,7 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
               debugPrint('categoria recebida: $categoria');
               setState(() {
                 _atualizaSeletor(categoria);
+                widget._onChangedCallback(categoria);
                 if (categoria != null) {
                   widget.categorias.add(categoria);
                 }

@@ -1,12 +1,15 @@
 import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/components/seletor_categoria.dart';
+import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
 
 class FormularioGasto extends StatefulWidget {
-  const FormularioGasto({Key? key}) : super(key: key);
+  final GastoDao _gastoDao = GastoDao();
+
+  FormularioGasto({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -15,9 +18,14 @@ class FormularioGasto extends StatefulWidget {
 }
 
 class FormularioGastoState extends State<FormularioGasto> {
-  final TextEditingController _controladorCampoCategoria =
+  final TextEditingController _controladorCampoDescricao =
       TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  final DateFormat _formatter = DateFormat('dd-MM-yyyy');
+  late final TextEditingController _controladorCampoData =
+      TextEditingController(text: _formatter.format(_selectedDate));
+  Categoria? _selectedCategoria;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,14 @@ class FormularioGastoState extends State<FormularioGasto> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SeletorCategoria(),
+            SeletorCategoria(_callbackSeletorCategoria),
+            Editor(
+              _controladorCampoData,
+              'Data',
+              'Data',
+              readOnly: true,
+              onTapCallback: () => _callbackDatePicker(),
+            ),
             Editor(
               _controladorCampoValor,
               'Valor',
@@ -37,17 +52,11 @@ class FormularioGastoState extends State<FormularioGasto> {
               textInputType: TextInputType.number,
             ),
             Editor(
-              _controladorCampoCategoria,
+              _controladorCampoDescricao,
               'Descrição',
               'Breve descrição do gasto.',
               maxLines: 5,
             ),
-            // MaterialPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-            // MultipleChoiceBlockPicker(pickerColors: const [Color(0xFFFFFFFF)], onColorsChanged: (color) {}, useInShowDialog: true,),
-            // ColorPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-            // ColorPickerLabel(HSVColor.fromColor(const Color(0xFFFFFFFF))),
-            // BlockPicker(pickerColor: const Color(0xFFFFFFFF), onColorChanged: (color) {}),
-            // ColorIndicator(HSVColor.fromColor(const Color(0xFFFFFFFF))),
             ElevatedButton(
               child: const Text('Confirmar'),
               onPressed: () => _criaGasto(context),
@@ -59,14 +68,42 @@ class FormularioGastoState extends State<FormularioGasto> {
   }
 
   void _criaGasto(BuildContext context) {
-    final int? numeroConta = int.tryParse(_controladorCampoCategoria.text);
+    final String? descricao = _controladorCampoDescricao.text;
     final double? valor = double.tryParse(_controladorCampoValor.text);
-    if (numeroConta != null && valor != null) {
-      final Gasto gastoCriado = Gasto(
-          valor, numeroConta, Categoria('default categoria', Colors.teal));
+    if (valor != null && _selectedCategoria != null) {
+      final Gasto novoGasto = Gasto(
+        1,
+        valor,
+        descricao!,
+        _selectedCategoria!,
+        _selectedDate,
+      );
       debugPrint('Criando gasto');
-      debugPrint('$gastoCriado');
-      Navigator.pop(context, gastoCriado);
+      debugPrint('$novoGasto');
+      widget._gastoDao.save(novoGasto);
+      Navigator.pop(context);
+    } else {
+      debugPrint('Nao criou gasto');
     }
+  }
+
+  void _callbackDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now(),
+    ).then((date) {
+      if (date != null) {
+        setState(() {
+          _selectedDate = date;
+          _controladorCampoData.text = _formatter.format(_selectedDate);
+        });
+      }
+    });
+  }
+
+  void _callbackSeletorCategoria(Categoria? categoria) {
+    _selectedCategoria = categoria;
   }
 }

@@ -12,33 +12,36 @@ class ItemGasto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: ListTile(
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: const [
-                  Icon(
-                    Icons.arrow_circle_down_rounded,
-                    size: 32,
-                    color: Colors.red,
-                  ),
-                  Icon(
-                    Icons.monetization_on_rounded,
-                    size: 32,
-                  ),
-                ],
-                mainAxisSize: MainAxisSize.min,
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: const [
+              Icon(
+                Icons.arrow_circle_down_rounded,
+                size: 32,
+                color: Colors.red,
+              ),
+              Icon(
+                Icons.monetization_on_rounded,
+                size: 32,
               ),
             ],
+            mainAxisSize: MainAxisSize.min,
           ),
-          title: Column(
-            children: [
-              getCategoria(0),
-              Text(_gasto.valor.toString()),
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+      ),
+      title: Column(
+        children: [
+          Chip(
+            label: Text(_gasto.categoria.name),
+            backgroundColor: _gasto.categoria.color,
           ),
-          subtitle: Text(_gasto.numeroConta.toString()),
-        ));
+          Text(_gasto.valor.toString()),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      subtitle: Text(_gasto.descricao),
+    ));
   }
 }

@@ -1,14 +1,16 @@
 import 'categoria.dart';
 
 class Gasto {
+  final int id;
   final double valor;
-  final int numeroConta;
+  final String descricao;
   final Categoria categoria;
+  final DateTime data;
 
-  Gasto(this.valor, this.numeroConta, this.categoria);
+  Gasto(this.id, this.valor, this.descricao, this.categoria, this.data);
 
   @override
   String toString() {
-    return 'Gasto{valor: $valor, numeroConta: $numeroConta, categoria: $categoria}';
+    return 'Gasto{id: $id, valor: $valor, descricao: $descricao, categoria: $categoria, data: $data}';
   }
 }

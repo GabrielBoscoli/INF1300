@@ -8,8 +8,14 @@ import 'package:intl/intl.dart';
 
 class FormularioGasto extends StatefulWidget {
   final GastoDao _gastoDao = GastoDao();
+  final Gasto? gasto;
+  final String? appBarTitle;
+  final IconButton? iconButton;
 
-  FormularioGasto({Key? key}) : super(key: key);
+  /// se o formulario é para edicao de um gasto ou criacao de um novo.
+  late final bool edit = gasto == null ? false : true;
+
+  FormularioGasto({Key? key, this.gasto, this.appBarTitle, this.iconButton}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,25 +24,40 @@ class FormularioGasto extends StatefulWidget {
 }
 
 class FormularioGastoState extends State<FormularioGasto> {
-  final TextEditingController _controladorCampoDescricao =
-      TextEditingController();
-  final TextEditingController _controladorCampoValor = TextEditingController();
+  late final TextEditingController _controladorCampoDescricao =
+      widget.gasto == null
+          ? TextEditingController()
+          : TextEditingController(text: widget.gasto!.descricao);
+  late final TextEditingController _controladorCampoValor = widget.gasto == null
+      ? TextEditingController()
+      : TextEditingController(text: widget.gasto!.valor.toString());
   DateTime _selectedDate = DateTime.now();
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
-  late final TextEditingController _controladorCampoData =
-      TextEditingController(text: _formatter.format(_selectedDate));
-  Categoria? _selectedCategoria;
+  late final TextEditingController _controladorCampoData = widget.gasto == null
+      ? TextEditingController(text: _formatter.format(_selectedDate))
+      : TextEditingController(text: _formatter.format(widget.gasto!.data));
+  late Categoria? _selectedCategoria = widget.gasto != null ? widget.gasto!.categoria : null;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo Gasto'),
+        title: widget.appBarTitle == null
+            ? const Text('Novo Gasto')
+            : Text(widget.appBarTitle!),
+        actions: <Widget>[
+          widget.iconButton == null
+              ? const SizedBox()
+              : widget.iconButton!,
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SeletorCategoria(_callbackSeletorCategoria),
+            widget.gasto == null
+                ? SeletorCategoria(_callbackSeletorCategoria)
+                : SeletorCategoria(_callbackSeletorCategoria,
+                    categoria: widget.gasto!.categoria),
             Editor(
               _controladorCampoData,
               'Data',
@@ -80,8 +101,17 @@ class FormularioGastoState extends State<FormularioGasto> {
       );
       debugPrint('Criando gasto');
       debugPrint('$novoGasto');
-      widget._gastoDao.save(novoGasto);
-      Navigator.pop(context);
+      if (widget.edit) {
+        debugPrint('update gasto');
+        novoGasto.id = widget.gasto!.id;
+        widget._gastoDao.update(novoGasto);
+      } else {
+        debugPrint('save gasto');
+        widget._gastoDao.save(novoGasto).then((value) {
+          novoGasto.id = value;
+        });
+      }
+      Navigator.pop(context, novoGasto);
     } else {
       debugPrint('Nao criou gasto');
     }

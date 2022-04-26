@@ -1,7 +1,7 @@
 import 'categoria.dart';
 
 class Gasto {
-  final int id;
+  int id;
   final double valor;
   final String descricao;
   final Categoria categoria;

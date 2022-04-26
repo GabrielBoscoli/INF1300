@@ -27,6 +27,8 @@ class GastoDao {
       '$_mes INTEGER,'
       '$_dia INTEGER)';
 
+  const GastoDao();
+
   Future<int> save(Gasto gasto) async {
     final Database db = await getDatabase();
     Map<String, dynamic> gastoMap = _toMap(gasto);
@@ -62,7 +64,6 @@ class GastoDao {
 
   Map<String, dynamic> _toMap(Gasto gasto) {
     final Map<String, dynamic> gastoMap = Map();
-    // TODO: Verificar se pode fazer um map pra tipos complexos como Categoria.
     gastoMap[_categoriaNome] = gasto.categoria.name;
     gastoMap[_categoriaCor] = gasto.categoria.color.value;
     gastoMap[_descricao] = gasto.descricao;

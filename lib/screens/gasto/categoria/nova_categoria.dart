@@ -1,4 +1,5 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/database/dao/categoria_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 class NovaCategoria extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
   Color? selectedColor;
+  final CategoriaDao categoriaDao = CategoriaDao();
 
   NovaCategoria({Key? key}) : super(key: key);
 
@@ -34,6 +36,7 @@ class NovaCategoria extends StatelessWidget {
                   Categoria? categoria;
                   if (_controller.text.isNotEmpty && selectedColor != null) {
                     categoria = Categoria(_controller.text, selectedColor!);
+                    categoriaDao.save(categoria);
                     Navigator.pop(context, categoria);
                   }
                 },

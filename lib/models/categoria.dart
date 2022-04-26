@@ -1,8 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-// enum Categorias { BEBIDA, GASOLINA, COMIDA, FESTA }
-
-class Categoria {
+class Categoria extends Equatable {
   final String name;
   final Color color;
 
@@ -12,4 +11,7 @@ class Categoria {
   String toString() {
     return 'Categoria{name: $name, color: $color}';
   }
+
+  @override
+  List<Object?> get props => [name, color];
 }

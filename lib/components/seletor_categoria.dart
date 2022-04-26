@@ -1,17 +1,15 @@
+import 'package:bytebank/database/dao/categoria_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SeletorCategoria extends StatefulWidget {
-  final List<Categoria> categorias = [
-    Categoria('Bebida', Colors.red),
-    Categoria('Comida', Colors.blue),
-    Categoria('Carro', Colors.green),
-  ];
   final Function _onChangedCallback;
+  final CategoriaDao _categoriaDao = const CategoriaDao();
+  final Categoria? categoria;
 
-  SeletorCategoria(this._onChangedCallback, {Key? key}) : super(key: key);
+  const SeletorCategoria(this._onChangedCallback, {Key? key, this.categoria}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,9 +18,23 @@ class SeletorCategoria extends StatefulWidget {
 }
 
 class SeletorCategoriaState extends State<SeletorCategoria> {
-  Categoria? dropdownValue;
-  late final unselectedColor = Theme.of(context).scaffoldBackgroundColor;
-  late Color selectedColor = unselectedColor;
+  Categoria? _dropdownValue;
+  late final _unselectedColor = Theme.of(context).scaffoldBackgroundColor;
+  late Color _selectedColor = _unselectedColor;
+  late Future<List<Categoria>>? _futureCategorias;
+  late List<Categoria> _categorias = [];
+
+  @override
+  void initState() {
+    debugPrint('initState');
+    super.initState();
+    _futureCategorias = widget._categoriaDao.findAll();
+    Categoria cat = Categoria('Spius', Colors.white);
+    if (widget.categoria != null) {
+      _categorias.add(widget.categoria!);
+      _atualizaSeletor(widget.categoria!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,38 +46,58 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButtonFormField<Categoria>(
-                    value: dropdownValue,
-                    style: const TextStyle(fontSize: 24.0),
-                    items: widget.categorias.map((categoria) {
-                      return DropdownMenuItem<Categoria>(
-                        value: categoria,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(categoria.name),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (categoria) {
-                      setState(()  {
-                        _atualizaSeletor(categoria);
-                        widget._onChangedCallback(categoria);
-                      });
-                    },
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Categoria',
-                      labelStyle: TextStyle(fontSize: 24.0),
-                      alignLabelWithHint: true,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
+                    child: FutureBuilder<List<Categoria>>(
+                        initialData: const [],
+                        future: _futureCategorias,
+                        builder: (context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.done:
+                              debugPrint('seletor categoria: connection state done');
+                              if (snapshot.data != null) {
+                                _categorias = snapshot.data!;
+                                debugPrint(_categorias.toString());
+                              }
+                              // vai fazer com que no proximo build o connection state seja none.
+                              _futureCategorias = null;
+                              break;
+                            default:
+                              break;
+                          } // switch
+                          debugPrint('Future Builder');
+                          debugPrint(_categorias.toString());
+                          debugPrint(_dropdownValue.toString());
+                          return DropdownButtonFormField<Categoria>(
+                            value: _dropdownValue,
+                            style: const TextStyle(fontSize: 24.0),
+                            items: _categorias.map((categoria) {
+                              return DropdownMenuItem<Categoria>(
+                                value: categoria,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(categoria.name),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (categoria) {
+                              setState(() {
+                                _atualizaSeletor(categoria);
+                                widget._onChangedCallback(categoria);
+                              });
+                            },
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Categoria',
+                              labelStyle: TextStyle(fontSize: 24.0),
+                              alignLabelWithHint: true,
+                              border: OutlineInputBorder(),
+                            ),
+                          );
+                        })),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: ColorIndicator(HSVColor.fromColor(selectedColor)),
+              child: ColorIndicator(HSVColor.fromColor(_selectedColor)),
             ),
           ],
         ),
@@ -83,7 +115,7 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
                 _atualizaSeletor(categoria);
                 widget._onChangedCallback(categoria);
                 if (categoria != null) {
-                  widget.categorias.add(categoria);
+                  _categorias.add(categoria);
                 }
               });
             });
@@ -98,11 +130,11 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
   }
 
   void _atualizaSeletor(Categoria? categoria) {
-    dropdownValue = categoria;
+    _dropdownValue = categoria;
     if (categoria != null) {
-      selectedColor = categoria.color;
+      _selectedColor = categoria.color;
     } else {
-      selectedColor = unselectedColor;
+      _selectedColor = _unselectedColor;
     }
   }
 }

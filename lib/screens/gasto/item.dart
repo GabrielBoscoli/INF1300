@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 class ItemGasto extends StatefulWidget {
   Gasto _gasto;
   final void Function(Gasto gasto)? deleteCallback;
+  final void Function(Gasto gasto)? editCallback;
+  static const int _fractionDigits = 2;
 
-  ItemGasto(this._gasto, {Key? key, this.deleteCallback}) : super(key: key);
+  ItemGasto(this._gasto, {Key? key, this.deleteCallback, this.editCallback}) : super(key: key);
 
   @override
   State<ItemGasto> createState() => _ItemGastoState();
@@ -42,7 +44,7 @@ class _ItemGastoState extends State<ItemGasto> {
                 label: Text(widget._gasto.categoria.name),
                 backgroundColor: widget._gasto.categoria.color,
               ),
-              Text(widget._gasto.valor.toString()),
+              Text('R\$ ${widget._gasto.valor.toStringAsFixed(ItemGasto._fractionDigits)}'),
             ],
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
@@ -58,12 +60,15 @@ class _ItemGastoState extends State<ItemGasto> {
                   IconButton(onPressed: () => {
                     Navigator.push(context, MaterialPageRoute(builder: (context) {
                       return FormularioEdicao(widget._gasto, deleteCallback: widget.deleteCallback,);
-                    })).then((value) {
-                      setState(() {
-                        if (value != null) {
-                          widget._gasto = value;
+                    })).then((gastoEditado) {
+                      if (gastoEditado != null) {
+                        setState(() {
+                          widget._gasto = gastoEditado;
+                        });
+                        if (widget.editCallback != null) {
+                          widget.editCallback!(gastoEditado);
                         }
-                      });
+                      }
                     })
                   }, icon: const Icon(Icons.edit),),
                 ],

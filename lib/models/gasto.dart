@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'categoria.dart';
 
-class Gasto {
+class Gasto extends Equatable {
   int id;
   final double valor;
   final String descricao;
@@ -13,4 +14,7 @@ class Gasto {
   String toString() {
     return 'Gasto{id: $id, valor: $valor, descricao: $descricao, categoria: $categoria, data: $data}';
   }
+
+  @override
+  List<Object?> get props => [id];
 }

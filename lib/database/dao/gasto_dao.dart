@@ -2,12 +2,15 @@ import 'dart:ui';
 
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/models/gasto.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../app_database.dart';
 
 class GastoDao {
   static const String _tableName = 'contacts';
+
+  ///TODO: mudar o table name pra gasto
   static const String _id = 'id';
   static const String _valor = 'valor';
   static const String _descricao = 'descricao';
@@ -16,7 +19,11 @@ class GastoDao {
   static const String _ano = 'ano';
   static const String _mes = 'mes';
   static const String _dia = 'dia';
-  // TODO: extrair categoria para uma tabela propria
+  static const String _whereDateHigherOrEqual =
+      '$_ano > ? OR ($_ano = ? AND $_mes > ?) OR ($_ano = ? AND $_mes = ? AND $_dia >= ?)';
+  static const String _whereDateLowerOrEqual =
+      '$_ano < ? OR ($_ano = ? AND $_mes < ?) OR ($_ano = ? AND $_mes = ? AND $_dia <= ?)';
+  // TODO: futuramente extrair categoria para uma tabela propria, afim de permitir multiplas categotias por gasto
   static const String tableSql = 'CREATE TABLE $_tableName('
       '$_id INTEGER PRIMARY KEY, '
       '$_valor REAL,'
@@ -40,6 +47,66 @@ class GastoDao {
     final List<Map<String, dynamic>> result = await db.query(_tableName);
     List<Gasto> gastos = _toList(result);
     return gastos;
+  }
+
+  Future<double> findTotalByDate(DateTimeRange dateTimeRange) async {
+    debugPrint('findTotalByDate');
+    const columnName = 'TOTAL($_valor)';
+    List<String> columns = [columnName];
+    final List<Map<String, dynamic>> result =
+        await _queryGastoByDateAux(dateTimeRange, columns);
+    double total = result[0][columnName];
+    return total;
+  }
+
+  Future<Map<Categoria, double>> findByDateGroupedByCategoria(
+      DateTimeRange dateTimeRange) async {
+    debugPrint('findByDateGroupedByCategoria');
+    const columnTotal = 'TOTAL($_valor)';
+    List<String> columns = [_categoriaNome, _categoriaCor, columnTotal];
+    final List<Map<String, dynamic>> result =
+        await _queryGastoByDateAux(dateTimeRange, columns, _categoriaNome);
+    return _toMapCategoria(result, columnTotal);
+  }
+
+  Future<List<Map<String, dynamic>>> _queryGastoByDateAux(
+      DateTimeRange dateTimeRange, List<String> columns,
+      [String? groupBy]) async {
+    /// separando os dados da data inicial
+    DateTime start = dateTimeRange.start;
+    final startDay = start.day;
+    final startMonth = start.month;
+    final startYear = start.year;
+
+    /// separando os dados da data final
+    DateTime end = dateTimeRange.end;
+    final endDay = end.day;
+    final endMonth = end.month;
+    final endYear = end.year;
+
+    final Database db = await getDatabase();
+
+    final List<Map<String, dynamic>> result = await db.query(
+      _tableName,
+      columns: columns,
+      where: '($_whereDateHigherOrEqual) AND ($_whereDateLowerOrEqual)',
+      whereArgs: [
+        startYear,
+        startYear,
+        startMonth,
+        startYear,
+        startMonth,
+        startDay,
+        endYear,
+        endYear,
+        endMonth,
+        endYear,
+        endMonth,
+        endDay
+      ],
+      groupBy: groupBy,
+    );
+    return result;
   }
 
   Future<int> update(Gasto gasto) async {
@@ -87,5 +154,20 @@ class GastoDao {
       gastos.add(gasto);
     }
     return gastos;
+  }
+
+  ///TODO: esse metodo vai mudar quando a categoria tiver tabela propria no futuro
+  Map<Categoria, double> _toMapCategoria(
+      List<Map<String, dynamic>> result, String columnTotal) {
+    debugPrint('_toMapCategoria');
+    Map<Categoria, double> resultMap = {};
+    for (Map<String, dynamic> row in result) {
+      final Categoria categoria = Categoria(
+        row[_categoriaNome],
+        Color(row[_categoriaCor]),
+      );
+      resultMap[categoria] = row[columnTotal];
+    }
+    return resultMap;
   }
 }

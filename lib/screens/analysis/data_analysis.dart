@@ -1,5 +1,6 @@
 import 'package:bytebank/components/loading.dart';
 import 'package:bytebank/screens/analysis/item.dart';
+import 'package:bytebank/screens/analysis/moedas.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,8 +27,8 @@ class _DataAnalysisState extends State<DataAnalysis> {
       DateTime(_dataCorrente.year, _dataCorrente.month, 1);
 
   late DateTime _dataFinal = DateTime.now();
-      // DateTime(_dataCorrente.year, _dataCorrente.month + 1, 0);
-      // isso colocaria a data no ultimo dia do mes corrente
+  // DateTime(_dataCorrente.year, _dataCorrente.month + 1, 0);
+  // isso colocaria a data no ultimo dia do mes corrente
 
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
 
@@ -47,7 +48,9 @@ class _DataAnalysisState extends State<DataAnalysis> {
   void initState() {
     debugPrint('data analysis init state...');
     super.initState();
-    DataAnalysis._gastoDao.findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal)).then((value) {
+    DataAnalysis._gastoDao
+        .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal))
+        .then((value) {
       debugPrint('init state then value: ' + value.toString());
       setState(() {
         _valorTotal = value;
@@ -110,11 +113,25 @@ class _DataAnalysisState extends State<DataAnalysis> {
       itemCount: _mapCategoriaValor.length,
       itemBuilder: (context, indice) {
         final Categoria categoria = _mapCategoriaValor.keys.elementAt(indice);
+        ItemAnalysis itemAnalysis;
+        double valorCategoria = 0;
         if (categoria == null) {
-          return ItemAnalysis(0.0, 0, Categoria('Unknown Error', Colors.red));
+          itemAnalysis = ItemAnalysis(
+              valorCategoria, 0, Categoria('Unknown Error', Colors.red));
+        } else {
+          valorCategoria = _mapCategoriaValor[categoria]!;
+          itemAnalysis = ItemAnalysis(valorCategoria,
+              (_mapCategoriaValor[categoria]! / _valorTotal) * 100, categoria);
         }
-        return ItemAnalysis(_mapCategoriaValor[categoria]!,
-            (_mapCategoriaValor[categoria]! / _valorTotal) * 100, categoria);
+        return GestureDetector(
+          onLongPress: () {
+            debugPrint('Gesture Detector: ' + valorCategoria.toString());
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Moedas(valorCategoria);
+            }));
+          },
+          child: itemAnalysis,
+        );
       },
     );
   }

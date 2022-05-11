@@ -103,11 +103,9 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
         ),
         TextButton(
           onPressed: () {
-            Future<Categoria?> future = Navigator.push(
+            final Future future = Navigator.pushNamed(
               context,
-              MaterialPageRoute(builder: (context) {
-                return NovaCategoria();
-              }),
+              '/novacategoria',
             );
             future.then((categoria) {
               debugPrint('categoria recebida: $categoria');

@@ -39,9 +39,7 @@ class ListaGastosState extends State<ListaGastos> {
           IconButton(
             onPressed: () {
               // final Future<Gasto?> future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return DataAnalysis();
-              }));
+              Navigator.pushNamed(context, '/dataanalysis');
             },
             icon: const Icon(Icons.analytics_rounded),
           ),
@@ -75,10 +73,8 @@ class ListaGastosState extends State<ListaGastos> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          final Future<Gasto?> future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return NovoGasto();
-          }));
+          final Future future =
+              Navigator.pushNamed(context, '/novogasto');
           future.then((gastoRecebido) {
             debugPrint('chegou no then do future');
             debugPrint('$gastoRecebido');

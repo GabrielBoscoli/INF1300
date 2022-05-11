@@ -1,5 +1,7 @@
-import 'package:bytebank/screens/gasto/lista.dart';
+import 'package:bytebank/screens/analysis/data_analysis.dart';
 import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
+import 'package:bytebank/screens/gasto/lista.dart';
+import 'package:bytebank/screens/gasto/novo_gasto.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(BytebankApp());
@@ -10,29 +12,11 @@ class BytebankApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: ListaGastos(),
+      routes: <String, WidgetBuilder>{
+        '/novogasto': (BuildContext context) => NovoGasto(),
+        '/dataanalysis': (BuildContext context) => DataAnalysis(),
+        '/novacategoria': (BuildContext context) => NovaCategoria(),
+      },
     );
   }
-}
-
-final List<Chip> categoriaChips = [
-  Chip(
-    label: const Text('Bebida'),
-    backgroundColor: Colors.blue,
-  ),
-  Chip(
-    label: const Text('Gasolina'),
-    backgroundColor: Colors.deepOrange,
-  ),
-  Chip(
-    label: const Text('Comida'),
-    backgroundColor: Colors.green,
-  ),
-  Chip(
-    label: const Text('Festa'),
-    backgroundColor: Colors.pink,
-  )
-];
-
-Chip getCategoria(int i) {
-  return categoriaChips[i];
 }

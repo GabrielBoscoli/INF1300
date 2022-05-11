@@ -23,7 +23,7 @@ class GastoDao {
       '$_ano > ? OR ($_ano = ? AND $_mes > ?) OR ($_ano = ? AND $_mes = ? AND $_dia >= ?)';
   static const String _whereDateLowerOrEqual =
       '$_ano < ? OR ($_ano = ? AND $_mes < ?) OR ($_ano = ? AND $_mes = ? AND $_dia <= ?)';
-  // TODO: futuramente extrair categoria para uma tabela propria, afim de permitir multiplas categotias por gasto
+  // TODO: futuramente extrair categoria para sua tabela propria, a fim de permitir multiplas categorias por gasto
   static const String tableSql = 'CREATE TABLE $_tableName('
       '$_id INTEGER PRIMARY KEY, '
       '$_valor REAL,'

@@ -18,7 +18,13 @@ class CategoriaDao {
   Future<int> save(Categoria categoria) async {
     final Database db = await getDatabase();
     Map<String, dynamic> categoriaMap = _toMap(categoria);
-    return db.insert(_tableName, categoriaMap);
+    int result;
+    try {
+      result = await db.insert(_tableName, categoriaMap);
+    } catch (e) {
+      result = 0;
+    }
+    return result;
   }
 
   Future<List<Categoria>> findAll() async {

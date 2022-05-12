@@ -10,7 +10,6 @@ import '../app_database.dart';
 class GastoDao {
   static const String _tableName = 'contacts';
 
-  ///TODO: mudar o table name pra gasto
   static const String _id = 'id';
   static const String _valor = 'valor';
   static const String _descricao = 'descricao';
@@ -50,7 +49,6 @@ class GastoDao {
   }
 
   Future<double> findTotalByDate(DateTimeRange dateTimeRange) async {
-    debugPrint('findTotalByDate');
     const columnName = 'TOTAL($_valor)';
     List<String> columns = [columnName];
     final List<Map<String, dynamic>> result =
@@ -61,7 +59,6 @@ class GastoDao {
 
   Future<Map<Categoria, double>> findByDateGroupedByCategoria(
       DateTimeRange dateTimeRange) async {
-    debugPrint('findByDateGroupedByCategoria');
     const columnTotal = 'TOTAL($_valor)';
     List<String> columns = [_categoriaNome, _categoriaCor, columnTotal];
     final List<Map<String, dynamic>> result =
@@ -156,10 +153,8 @@ class GastoDao {
     return gastos;
   }
 
-  ///TODO: esse metodo vai mudar quando a categoria tiver tabela propria no futuro
   Map<Categoria, double> _toMapCategoria(
       List<Map<String, dynamic>> result, String columnTotal) {
-    debugPrint('_toMapCategoria');
     Map<Categoria, double> resultMap = {};
     for (Map<String, dynamic> row in result) {
       final Categoria categoria = Categoria(

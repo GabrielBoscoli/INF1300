@@ -1,6 +1,5 @@
 import 'package:bytebank/database/dao/categoria_dao.dart';
 import 'package:bytebank/models/categoria.dart';
-import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -26,7 +25,6 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
 
   @override
   void initState() {
-    debugPrint('initState');
     super.initState();
     _futureCategorias = widget._categoriaDao.findAll();
     Categoria cat = Categoria('Spius', Colors.white);
@@ -52,20 +50,14 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
                         builder: (context, snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.done:
-                              debugPrint('seletor categoria: connection state done');
                               if (snapshot.data != null) {
                                 _categorias = snapshot.data!;
-                                debugPrint(_categorias.toString());
                               }
-                              // vai fazer com que no proximo build o connection state seja none.
                               _futureCategorias = null;
                               break;
                             default:
                               break;
                           } // switch
-                          debugPrint('Future Builder');
-                          debugPrint(_categorias.toString());
-                          debugPrint(_dropdownValue.toString());
                           return DropdownButtonFormField<Categoria>(
                             value: _dropdownValue,
                             style: const TextStyle(fontSize: 24.0),
@@ -108,7 +100,6 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
               '/novacategoria',
             );
             future.then((categoria) {
-              debugPrint('categoria recebida: $categoria');
               setState(() {
                 _atualizaSeletor(categoria);
                 widget._onChangedCallback(categoria);

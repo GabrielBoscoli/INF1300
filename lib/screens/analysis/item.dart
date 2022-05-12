@@ -27,7 +27,6 @@ class ItemAnalysis extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Expanded(
-              /// esses expandeds sao necessarios para a row dividir em tres - com o mainAxisAlignment nao fica tao bom
               child: Chip(
                 label: CenteredText(
                   categoria.name,

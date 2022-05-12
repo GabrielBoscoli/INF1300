@@ -57,7 +57,6 @@ class _NovaCategoriaState extends State<NovaCategoria> {
   }
 
   void _criaCategoria(BuildContext context) {
-    debugPrint('confirmou nova categoria');
     Categoria? categoria;
     if (_controller.text.isNotEmpty && selectedColor != null) {
       categoria = Categoria(_controller.text, selectedColor!);

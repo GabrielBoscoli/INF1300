@@ -9,8 +9,6 @@ import 'package:intl/intl.dart';
 class FormularioGasto extends StatefulWidget {
   final GastoDao _gastoDao = GastoDao();
   final Gasto? gasto;
-
-  /// se o formulario é para edicao de um gasto ou criacao de um novo.
   late final bool edit = gasto == null ? false : true;
 
   FormularioGasto({Key? key, this.gasto}) : super(key: key);
@@ -93,14 +91,10 @@ class FormularioGastoState extends State<FormularioGasto> {
         _selectedCategoria!,
         _selectedDate,
       );
-      debugPrint('Criando gasto');
-      debugPrint('$novoGasto');
       if (widget.edit) {
-        debugPrint('update gasto');
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
       } else {
-        debugPrint('save gasto');
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
         });

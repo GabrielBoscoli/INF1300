@@ -41,14 +41,12 @@ class _MoedasState extends State<Moedas> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              debugPrint('connection state none');
               return _listBuilder();
             case ConnectionState.waiting:
               return Loading();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              debugPrint('connection state done');
               if (snapshot.data == null) {
                 return const SizedBox();
               }

@@ -9,8 +9,6 @@ import 'formulario_gasto.dart';
 class FormularioEdicao extends StatelessWidget {
   final Gasto _gasto;
   final GastoDao _gastoDao = const GastoDao();
-
-  /// método que será chamado ao deletar o gasto.
   final void Function(Gasto gasto)? deleteCallback;
 
   static const String _title = 'Editar Gasto';
@@ -36,9 +34,7 @@ class FormularioEdicao extends StatelessWidget {
                     );
                   }).then((value) {
                 if (value != null && value) {
-                  debugPrint('deletando transação do banco de dados...');
                   _gastoDao.delete(_gasto.id);
-                  debugPrint('transação deletada');
                   if (deleteCallback != null) {
                     deleteCallback!(_gasto);
                   }

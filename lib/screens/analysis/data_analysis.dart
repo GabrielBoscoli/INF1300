@@ -27,8 +27,6 @@ class _DataAnalysisState extends State<DataAnalysis> {
       DateTime(_dataCorrente.year, _dataCorrente.month, 1);
 
   late DateTime _dataFinal = DateTime.now();
-  // DateTime(_dataCorrente.year, _dataCorrente.month + 1, 0);
-  // isso colocaria a data no ultimo dia do mes corrente
 
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
 
@@ -46,12 +44,10 @@ class _DataAnalysisState extends State<DataAnalysis> {
 
   @override
   void initState() {
-    debugPrint('data analysis init state...');
     super.initState();
     DataAnalysis._gastoDao
         .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal))
         .then((value) {
-      debugPrint('init state then value: ' + value.toString());
       setState(() {
         _valorTotal = value;
       });
@@ -81,22 +77,17 @@ class _DataAnalysisState extends State<DataAnalysis> {
             onTapCallback: () => _callbackDataFinal(),
           ),
           Expanded(
-            /// tem que ter esse expanded se nao a lista nao renderiza
             child: FutureBuilder<Map<Categoria, double>>(
                 future: _futureMap,
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.none:
-                      debugPrint('data analysis connection state none');
                       return _listBuilder();
                     case ConnectionState.active:
-                      debugPrint('data analysis connection state active');
                       break;
                     case ConnectionState.waiting:
-                      debugPrint('data analysis connection state waiting');
                       return Loading();
                     case ConnectionState.done:
-                      debugPrint('data analysis connection state done');
                       _mapCategoriaValor = snapshot.data ?? {};
                       return _listBuilder();
                   }
@@ -125,7 +116,6 @@ class _DataAnalysisState extends State<DataAnalysis> {
         }
         return GestureDetector(
           onLongPress: () {
-            debugPrint('Gesture Detector: ' + valorCategoria.toString());
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return Moedas(valorCategoria);
             }));

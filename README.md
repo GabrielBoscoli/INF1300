@@ -1,4 +1,4 @@
-# bytebank
+# INF1300
 
 A new Flutter project.
 

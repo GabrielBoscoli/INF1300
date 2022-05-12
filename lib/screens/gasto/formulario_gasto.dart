@@ -82,7 +82,7 @@ class FormularioGastoState extends State<FormularioGasto> {
 
   void _criaGasto(BuildContext context) {
     final String? descricao = _controladorCampoDescricao.text;
-    final double? valor = double.tryParse(_controladorCampoValor.text);
+    final double? valor = double.tryParse(_controladorCampoValor.text.replaceAll(',', '.'));
     if (valor != null && _selectedCategoria != null) {
       final Gasto novoGasto = Gasto(
         1,

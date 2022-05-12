@@ -27,7 +27,6 @@ class SeletorCategoriaState extends State<SeletorCategoria> {
   void initState() {
     super.initState();
     _futureCategorias = widget._categoriaDao.findAll();
-    Categoria cat = Categoria('Spius', Colors.white);
     if (widget.categoria != null) {
       _categorias.add(widget.categoria!);
       _atualizaSeletor(widget.categoria!);

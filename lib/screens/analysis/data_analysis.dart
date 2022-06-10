@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:bytebank/components/default_container.dart';
 import 'package:bytebank/components/loading.dart';
 import 'package:bytebank/screens/analysis/item.dart';
 import 'package:bytebank/screens/analysis/moedas.dart';
@@ -24,19 +27,20 @@ class _DataAnalysisState extends State<DataAnalysis> {
   final _dataCorrente = DateTime.now();
 
   late DateTime _dataInicial =
-      DateTime(_dataCorrente.year, _dataCorrente.month, 1);
+  DateTime(_dataCorrente.year, _dataCorrente.month, 1);
 
   late DateTime _dataFinal = DateTime.now();
 
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
 
   late final _controladorCampoDataInicial =
-      TextEditingController(text: _formatter.format(_dataInicial));
+  TextEditingController(text: _formatter.format(_dataInicial));
 
   late final _controladorCampoDataFinal =
-      TextEditingController(text: _formatter.format(_dataFinal));
+  TextEditingController(text: _formatter.format(_dataFinal));
 
   late Future<Map<Categoria, double>>? _futureMap;
+  final StreamController<Map<Categoria, double>> _streamController = StreamController<Map<Categoria, double>>();
 
   Map<Categoria, double> _mapCategoriaValor = {};
 
@@ -45,15 +49,15 @@ class _DataAnalysisState extends State<DataAnalysis> {
   @override
   void initState() {
     super.initState();
-    DataAnalysis._gastoDao
-        .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal))
-        .then((value) {
-      setState(() {
-        _valorTotal = value;
-      });
-    });
-    _futureMap = DataAnalysis._gastoDao.findByDateGroupedByCategoria(
+    loadLista();
+  }
+
+  loadLista() async {
+    _valorTotal = await DataAnalysis._gastoDao
+        .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal));
+    Map<Categoria, double> dado = await DataAnalysis._gastoDao.findByDateGroupedByCategoria(
         DateTimeRange(start: _dataInicial, end: _dataFinal));
+    _streamController.add(dado);
   }
 
   @override
@@ -77,21 +81,17 @@ class _DataAnalysisState extends State<DataAnalysis> {
             onTapCallback: () => _callbackDataFinal(),
           ),
           Expanded(
-            child: FutureBuilder<Map<Categoria, double>>(
-                future: _futureMap,
+            child: StreamBuilder<Map<Categoria, double>>(
+                stream: _streamController.stream,
                 builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return _listBuilder();
-                    case ConnectionState.active:
-                      break;
-                    case ConnectionState.waiting:
-                      return Loading();
-                    case ConnectionState.done:
-                      _mapCategoriaValor = snapshot.data ?? {};
-                      return _listBuilder();
+                  if (!snapshot.hasData) {
+                    return Loading();
                   }
-                  return const Text('Unknown error');
+                  _mapCategoriaValor = snapshot.data!;
+                  if (_mapCategoriaValor.isEmpty) {
+                    return const Text("Não há gastos no período");
+                  }
+                  return _listBuilder();
                 }),
           ),
         ],
@@ -141,33 +141,29 @@ class _DataAnalysisState extends State<DataAnalysis> {
 
   void _callbackDataInicial() {
     _showDatePicker(_dataInicial).then((date) => {
-          if (date != null)
-            {
-              setState(() {
-                _dataInicial = date;
-                _controladorCampoDataInicial.text =
-                    _formatter.format(_dataInicial);
-                _futureMap = DataAnalysis._gastoDao
-                    .findByDateGroupedByCategoria(
-                        DateTimeRange(start: _dataInicial, end: _dataFinal));
-              })
-            }
-        });
+      if (date != null)
+        {
+          setState(() {
+            _dataInicial = date;
+            _controladorCampoDataInicial.text =
+                _formatter.format(_dataInicial);
+            loadLista();
+          })
+        }
+    });
     return;
   }
 
   void _callbackDataFinal() {
     _showDatePicker(_dataFinal).then((date) => {
-          if (date != null)
-            {
-              setState(() {
-                _dataFinal = date;
-                _controladorCampoDataFinal.text = _formatter.format(_dataFinal);
-                _futureMap = DataAnalysis._gastoDao
-                    .findByDateGroupedByCategoria(
-                        DateTimeRange(start: _dataInicial, end: _dataFinal));
-              })
-            }
-        });
+      if (date != null)
+        {
+          setState(() {
+            _dataFinal = date;
+            _controladorCampoDataFinal.text = _formatter.format(_dataFinal);
+            loadLista();
+          })
+        }
+    });
   }
 }

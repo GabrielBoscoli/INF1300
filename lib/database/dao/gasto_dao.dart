@@ -18,6 +18,7 @@ class GastoDao {
   static const String _ano = 'ano';
   static const String _mes = 'mes';
   static const String _dia = 'dia';
+  static const String _imagem = 'imagem';
   static const String _whereDateHigherOrEqual =
       '$_ano > ? OR ($_ano = ? AND $_mes > ?) OR ($_ano = ? AND $_mes = ? AND $_dia >= ?)';
   static const String _whereDateLowerOrEqual =
@@ -28,6 +29,7 @@ class GastoDao {
       '$_valor REAL,'
       '$_descricao TEXT,'
       '$_categoriaNome TEXT,'
+      '$_imagem TEXT,'
       '$_categoriaCor INTEGER,'
       '$_ano INTEGER,'
       '$_mes INTEGER,'
@@ -135,6 +137,7 @@ class GastoDao {
     gastoMap[_mes] = gasto.data.month;
     gastoMap[_dia] = gasto.data.day;
     gastoMap[_valor] = gasto.valor;
+    gastoMap[_imagem] = gasto.imagePath;
     return gastoMap;
   }
 
@@ -147,6 +150,7 @@ class GastoDao {
         row[_descricao],
         Categoria(row[_categoriaNome], Color(row[_categoriaCor])),
         DateTime(row[_ano], row[_mes], row[_dia]),
+        row[_imagem],
       );
       gastos.add(gasto);
     }

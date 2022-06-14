@@ -7,8 +7,9 @@ class Gasto extends Equatable {
   final String descricao;
   final Categoria categoria;
   final DateTime data;
+  String? imagePath;
 
-  Gasto(this.id, this.valor, this.descricao, this.categoria, this.data);
+  Gasto(this.id, this.valor, this.descricao, this.categoria, this.data, [this.imagePath]);
 
   @override
   String toString() {

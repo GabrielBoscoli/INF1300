@@ -4,6 +4,7 @@ import 'package:bytebank/components/seletor_categoria.dart';
 import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/models/gasto.dart';
+import 'package:bytebank/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -127,6 +128,7 @@ class FormularioGastoState extends State<FormularioGasto> {
           novoGasto.id = value;
         });
       }
+      NotificationService().showNotification();
       Navigator.pop(context, novoGasto);
     } else {
       debugPrint('Nao criou gasto');

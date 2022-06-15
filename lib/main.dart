@@ -2,9 +2,14 @@ import 'package:bytebank/screens/analysis/data_analysis.dart';
 import 'package:bytebank/screens/gasto/categoria/nova_categoria.dart';
 import 'package:bytebank/screens/gasto/lista.dart';
 import 'package:bytebank/screens/gasto/novo_gasto.dart';
+import 'package:bytebank/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(BytebankApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  runApp(BytebankApp());
+}
 
 class BytebankApp extends StatelessWidget {
   @override

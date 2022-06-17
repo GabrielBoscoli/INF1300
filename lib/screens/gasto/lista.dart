@@ -3,7 +3,9 @@ import 'package:bytebank/components/meta/meta_appbar_text.dart';
 import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../stores/meta_store.dart';
 import 'item.dart';
 
 class ListaGastos extends StatefulWidget {
@@ -20,6 +22,7 @@ class ListaGastos extends StatefulWidget {
 class ListaGastosState extends State<ListaGastos> {
   late Future<List<Gasto>>? _futureGastos;
   late final List<Gasto> _gastos;
+  late MetaStore metaStore;
 
   @override
   void initState() {
@@ -29,6 +32,7 @@ class ListaGastosState extends State<ListaGastos> {
 
   @override
   Widget build(BuildContext context) {
+    metaStore = Provider.of<MetaStore>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gastos'),
@@ -101,6 +105,7 @@ class ListaGastosState extends State<ListaGastos> {
     setState(() {
       resp = _gastos.remove(gasto);
     });
+    metaStore.subAtual(gasto.valor.toInt());
     if (resp) {
       debugPrint('gasto removido');
     } else {

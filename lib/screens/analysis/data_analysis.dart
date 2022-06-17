@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../../components/geral/editor.dart';
 import '../../components/geral/loading.dart';
+import '../../components/meta/meta_appbar_text.dart';
 import '../../database/dao/gasto_dao.dart';
 import '../../models/categoria.dart';
 
@@ -27,19 +28,20 @@ class _DataAnalysisState extends State<DataAnalysis> {
   final _dataCorrente = DateTime.now();
 
   late DateTime _dataInicial =
-  DateTime(_dataCorrente.year, _dataCorrente.month, 1);
+      DateTime(_dataCorrente.year, _dataCorrente.month, 1);
 
   late DateTime _dataFinal = DateTime.now();
 
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
 
   late final _controladorCampoDataInicial =
-  TextEditingController(text: _formatter.format(_dataInicial));
+      TextEditingController(text: _formatter.format(_dataInicial));
 
   late final _controladorCampoDataFinal =
-  TextEditingController(text: _formatter.format(_dataFinal));
+      TextEditingController(text: _formatter.format(_dataFinal));
 
-  final StreamController<Map<Categoria, double>> _streamController = StreamController<Map<Categoria, double>>();
+  final StreamController<Map<Categoria, double>> _streamController =
+      StreamController<Map<Categoria, double>>();
 
   Map<Categoria, double> _mapCategoriaValor = {};
 
@@ -60,15 +62,21 @@ class _DataAnalysisState extends State<DataAnalysis> {
   loadLista() async {
     _valorTotal = await DataAnalysis._gastoDao
         .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal));
-    Map<Categoria, double> dado = await DataAnalysis._gastoDao.findByDateGroupedByCategoria(
-        DateTimeRange(start: _dataInicial, end: _dataFinal));
+    Map<Categoria, double> dado = await DataAnalysis._gastoDao
+        .findByDateGroupedByCategoria(
+            DateTimeRange(start: _dataInicial, end: _dataFinal));
     _streamController.add(dado);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(DataAnalysis._appBarTitle)),
+      appBar: AppBar(
+        title: const Text(DataAnalysis._appBarTitle),
+        actions: <Widget>[
+          MetaAppBarText(),
+        ],
+      ),
       body: Column(
         children: [
           Editor(
@@ -146,29 +154,29 @@ class _DataAnalysisState extends State<DataAnalysis> {
 
   void _callbackDataInicial() {
     _showDatePicker(_dataInicial).then((date) => {
-      if (date != null)
-        {
-          setState(() {
-            _dataInicial = date;
-            _controladorCampoDataInicial.text =
-                _formatter.format(_dataInicial);
-            loadLista();
-          })
-        }
-    });
+          if (date != null)
+            {
+              setState(() {
+                _dataInicial = date;
+                _controladorCampoDataInicial.text =
+                    _formatter.format(_dataInicial);
+                loadLista();
+              })
+            }
+        });
     return;
   }
 
   void _callbackDataFinal() {
     _showDatePicker(_dataFinal).then((date) => {
-      if (date != null)
-        {
-          setState(() {
-            _dataFinal = date;
-            _controladorCampoDataFinal.text = _formatter.format(_dataFinal);
-            loadLista();
-          })
-        }
-    });
+          if (date != null)
+            {
+              setState(() {
+                _dataFinal = date;
+                _controladorCampoDataFinal.text = _formatter.format(_dataFinal);
+                loadLista();
+              })
+            }
+        });
   }
 }

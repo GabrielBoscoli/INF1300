@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/geral/editor.dart';
+import '../../stores/meta_store.dart';
 
 class FormularioGasto extends StatefulWidget {
   final GastoDao _gastoDao = GastoDao();
@@ -32,6 +34,7 @@ class FormularioGastoState extends State<FormularioGasto> {
   late final TextEditingController _controladorCampoValor = widget.gasto == null
       ? TextEditingController()
       : TextEditingController(text: widget.gasto!.valor.toString());
+  late final double valorOriginal = widget.gasto != null ? widget.gasto!.valor : 0;
   late DateTime _selectedDate =
       widget.gasto != null ? widget.gasto!.data : DateTime.now();
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
@@ -43,6 +46,7 @@ class FormularioGastoState extends State<FormularioGasto> {
   late bool _camposPreenchidos = widget.gasto != null ? true : false;
   late String? _imagePath =
       widget.gasto != null ? widget.gasto!.imagePath : null;
+  late MetaStore metaStore;
 
   @override
   void initState() {
@@ -57,6 +61,7 @@ class FormularioGastoState extends State<FormularioGasto> {
 
   @override
   Widget build(BuildContext context) {
+    metaStore = Provider.of<MetaStore>(context);
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -124,10 +129,13 @@ class FormularioGastoState extends State<FormularioGasto> {
       if (widget.edit) {
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
+        metaStore.subAtual(valorOriginal.toInt());
+        metaStore.addAtual(valor.toInt());
       } else {
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
         });
+        metaStore.addAtual(valor.toInt());
       }
       NotificationService().showNotification();
       Navigator.pop(context, novoGasto);

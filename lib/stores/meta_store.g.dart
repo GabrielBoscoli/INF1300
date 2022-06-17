@@ -39,19 +39,24 @@ mixin _$MetaStore on _MetaStore, Store {
     });
   }
 
-  late final _$_MetaStoreActionController =
-      ActionController(name: '_MetaStore', context: context);
+  late final _$loadMetaAsyncAction =
+      AsyncAction('_MetaStore.loadMeta', context: context);
 
   @override
-  void updateMeta(int meta) {
-    final _$actionInfo =
-        _$_MetaStoreActionController.startAction(name: '_MetaStore.updateMeta');
-    try {
-      return super.updateMeta(meta);
-    } finally {
-      _$_MetaStoreActionController.endAction(_$actionInfo);
-    }
+  Future<void> loadMeta() {
+    return _$loadMetaAsyncAction.run(() => super.loadMeta());
   }
+
+  late final _$updateMetaAsyncAction =
+      AsyncAction('_MetaStore.updateMeta', context: context);
+
+  @override
+  Future<void> updateMeta(int meta) {
+    return _$updateMetaAsyncAction.run(() => super.updateMeta(meta));
+  }
+
+  late final _$_MetaStoreActionController =
+      ActionController(name: '_MetaStore', context: context);
 
   @override
   void addAtual(int value) {

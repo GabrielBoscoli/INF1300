@@ -3,6 +3,7 @@ import 'package:bytebank/components/geral/default_container.dart';
 import 'package:flutter/material.dart';
 import '../../api/post.dart';
 import '../../components/geral/loading.dart';
+import '../../components/meta/meta_appbar_text.dart';
 
 class Moedas extends StatefulWidget {
   final double _valor;
@@ -25,7 +26,7 @@ class _MoedasState extends State<Moedas> {
     super.initState();
     try {
       _futurePost = widget.cotacaoAPI.fetchPost();
-    } catch(e) {
+    } catch (e) {
       debugPrint("Erro ao buscar dados da api");
     }
   }
@@ -33,31 +34,33 @@ class _MoedasState extends State<Moedas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('R\$ ${widget._valor.toStringAsFixed(Moedas._titleFractionDigits)}'),
-      ),
-      body: FutureBuilder<Post>(
-        future: _futurePost,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return _listBuilder();
-            case ConnectionState.waiting:
-              return Loading();
-            case ConnectionState.active:
-              break;
-            case ConnectionState.done:
-              if (snapshot.data == null) {
-                return const SizedBox();
-              }
-              _post = snapshot.data!;
-              _futurePost = null;
-              return _listBuilder();
-          }
-          return const Text('Unknown error');
-        },
-      )
-    );
+        appBar: AppBar(
+            title: Text(
+                'R\$ ${widget._valor.toStringAsFixed(Moedas._titleFractionDigits)}'),
+            actions: <Widget>[
+              MetaAppBarText(),
+            ]),
+        body: FutureBuilder<Post>(
+          future: _futurePost,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return _listBuilder();
+              case ConnectionState.waiting:
+                return Loading();
+              case ConnectionState.active:
+                break;
+              case ConnectionState.done:
+                if (snapshot.data == null) {
+                  return const SizedBox();
+                }
+                _post = snapshot.data!;
+                _futurePost = null;
+                return _listBuilder();
+            }
+            return const Text('Unknown error');
+          },
+        ));
   }
 
   ListView _listBuilder() {
@@ -67,7 +70,8 @@ class _MoedasState extends State<Moedas> {
       itemCount: Post.numMoedas,
       itemBuilder: (context, indice) {
         final String currencyName = _post.getCurrencies().elementAt(indice);
-        final double currencyValue = _post.getValueFromCurrency(currencyName) * widget._valor;
+        final double currencyValue =
+            _post.getValueFromCurrency(currencyName) * widget._valor;
         return DefaultContainer(
           '$currencyName: ${currencyValue.toStringAsFixed(Moedas._itemFractionDigits)}',
         );

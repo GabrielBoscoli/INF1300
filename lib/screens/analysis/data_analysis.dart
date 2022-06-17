@@ -52,6 +52,12 @@ class _DataAnalysisState extends State<DataAnalysis> {
     loadLista();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController.close();
+  }
+
   loadLista() async {
     _valorTotal = await DataAnalysis._gastoDao
         .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal));

@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:bytebank/components/default_container.dart';
-import 'package:bytebank/components/loading.dart';
+import 'package:bytebank/components/geral/default_container.dart';
 import 'package:bytebank/screens/analysis/item.dart';
 import 'package:bytebank/screens/analysis/moedas.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../components/editor.dart';
+import '../../components/geral/editor.dart';
+import '../../components/geral/loading.dart';
 import '../../database/dao/gasto_dao.dart';
 import '../../models/categoria.dart';
 
@@ -39,7 +39,6 @@ class _DataAnalysisState extends State<DataAnalysis> {
   late final _controladorCampoDataFinal =
   TextEditingController(text: _formatter.format(_dataFinal));
 
-  late Future<Map<Categoria, double>>? _futureMap;
   final StreamController<Map<Categoria, double>> _streamController = StreamController<Map<Categoria, double>>();
 
   Map<Categoria, double> _mapCategoriaValor = {};

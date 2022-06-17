@@ -1,4 +1,5 @@
-import 'package:bytebank/components/loading.dart';
+import 'package:bytebank/components/geral/loading.dart';
+import 'package:bytebank/components/meta/meta_appbar_text.dart';
 import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class ListaGastosState extends State<ListaGastos> {
       appBar: AppBar(
         title: const Text('Gastos'),
         actions: <Widget>[
+          MetaAppBarText(),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/dataanalysis');

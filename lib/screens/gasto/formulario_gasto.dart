@@ -1,6 +1,5 @@
-import 'package:bytebank/components/editor.dart';
-import 'package:bytebank/components/options_dialog_box.dart';
-import 'package:bytebank/components/seletor_categoria.dart';
+import 'package:bytebank/components/camera/options_dialog_box.dart';
+import 'package:bytebank/components/categoria/seletor_categoria.dart';
 import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:bytebank/models/gasto.dart';
@@ -9,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
+import '../../components/geral/editor.dart';
 
 class FormularioGasto extends StatefulWidget {
   final GastoDao _gastoDao = GastoDao();

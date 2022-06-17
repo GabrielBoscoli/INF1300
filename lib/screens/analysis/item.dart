@@ -1,4 +1,4 @@
-import 'package:bytebank/components/centered_text.dart';
+import 'package:bytebank/components/geral/centered_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/categoria.dart';

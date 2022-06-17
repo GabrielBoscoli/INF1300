@@ -1,8 +1,8 @@
 import 'package:bytebank/api/cotacao_api.dart';
-import 'package:bytebank/components/default_container.dart';
+import 'package:bytebank/components/geral/default_container.dart';
 import 'package:flutter/material.dart';
 import '../../api/post.dart';
-import '../../components/loading.dart';
+import '../../components/geral/loading.dart';
 
 class Moedas extends StatefulWidget {
   final double _valor;
@@ -61,9 +61,9 @@ class _MoedasState extends State<Moedas> {
   }
 
   ListView _listBuilder() {
-    final double bottomListPadding = 20.0;
+    const double bottomListPadding = 20.0;
     return ListView.builder(
-      padding: EdgeInsets.only(bottom: bottomListPadding),
+      padding: const EdgeInsets.only(bottom: bottomListPadding),
       itemCount: Post.numMoedas,
       itemBuilder: (context, indice) {
         final String currencyName = _post.getCurrencies().elementAt(indice);

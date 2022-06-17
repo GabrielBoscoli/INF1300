@@ -1,8 +1,9 @@
-import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/database/dao/categoria_dao.dart';
 import 'package:bytebank/models/categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+import '../../../components/geral/editor.dart';
 
 class NovaCategoria extends StatefulWidget {
   NovaCategoria({Key? key}) : super(key: key);

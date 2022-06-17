@@ -1,4 +1,4 @@
-import 'package:bytebank/components/yes_no_dialog.dart';
+import 'package:bytebank/components/geral/yes_no_dialog.dart';
 import 'package:bytebank/database/dao/gasto_dao.dart';
 import 'package:bytebank/models/gasto.dart';
 import 'package:flutter/material.dart';

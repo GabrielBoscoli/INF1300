@@ -59,22 +59,22 @@ mixin _$MetaStore on _MetaStore, Store {
       ActionController(name: '_MetaStore', context: context);
 
   @override
-  void addAtual(int value) {
+  void addAtual(DateTime date, int value) {
     final _$actionInfo =
         _$_MetaStoreActionController.startAction(name: '_MetaStore.addAtual');
     try {
-      return super.addAtual(value);
+      return super.addAtual(date, value);
     } finally {
       _$_MetaStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void subAtual(int value) {
+  void subAtual(DateTime date, int value) {
     final _$actionInfo =
         _$_MetaStoreActionController.startAction(name: '_MetaStore.subAtual');
     try {
-      return super.subAtual(value);
+      return super.subAtual(date, value);
     } finally {
       _$_MetaStoreActionController.endAction(_$actionInfo);
     }

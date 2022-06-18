@@ -41,13 +41,17 @@ abstract class _MetaStore with Store {
   }
 
   @action
-  void addAtual(int value) {
-    atual += value;
+  void addAtual(DateTime date, int value) {
+    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
+      atual += value;
+    }
   }
 
   @action
-  void subAtual(int value) {
-    atual -= value;
+  void subAtual(DateTime date, int value) {
+    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
+      atual -= value;
+    }
   }
 
   void _initMetaStore() async {

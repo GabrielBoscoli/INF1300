@@ -23,7 +23,6 @@ class ListaGastosState extends State<ListaGastos> {
   late Future<List<Gasto>>? _futureGastos;
   late final List<Gasto> _gastos;
   late MetaStore metaStore;
-  final _dataCorrente = DateTime.now();
 
   @override
   void initState() {
@@ -105,9 +104,7 @@ class ListaGastosState extends State<ListaGastos> {
     setState(() {
       _gastos.remove(gasto);
     });
-    if (gasto.data.month == _dataCorrente.month && gasto.data.year == _dataCorrente.year) {
-      metaStore.subAtual(gasto.valor.toInt());
-    }
+    metaStore.subAtual(gasto.data, gasto.valor.toInt());
   }
 
   editGasto(Gasto gasto) {

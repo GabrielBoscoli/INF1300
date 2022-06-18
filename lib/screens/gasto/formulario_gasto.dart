@@ -49,7 +49,6 @@ class FormularioGastoState extends State<FormularioGasto> {
   late String? _imagePath =
       widget.gasto != null ? widget.gasto!.imagePath : null;
   late MetaStore metaStore;
-  final _dataCorrente = DateTime.now();
 
   @override
   void initState() {
@@ -132,13 +131,13 @@ class FormularioGastoState extends State<FormularioGasto> {
       if (widget.edit) {
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
-        _subAtual(_originalDate, valor);
+        metaStore.subAtual(_originalDate, valor.toInt());
       } else {
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
         });
       }
-      _addAtual(_selectedDate, valor);
+      metaStore.addAtual(_selectedDate, valor.toInt());
       NotificationService().showNotification();
       Navigator.pop(context, novoGasto);
     } else {
@@ -181,17 +180,5 @@ class FormularioGastoState extends State<FormularioGasto> {
           _controladorCampoValor.text.isNotEmpty &&
           _selectedCategoria != null;
     });
-  }
-
-  void _addAtual(DateTime date, double valor) {
-    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
-      metaStore.addAtual(valor.toInt());
-    }
-  }
-
-  void _subAtual(DateTime date, double valor) {
-    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
-      metaStore.subAtual(valor.toInt());
-    }
   }
 }

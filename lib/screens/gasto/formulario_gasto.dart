@@ -132,20 +132,13 @@ class FormularioGastoState extends State<FormularioGasto> {
       if (widget.edit) {
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
-        if (_originalDate.month == _dataCorrente.month && _originalDate.year == _dataCorrente.year) {
-          metaStore.subAtual(valorOriginal.toInt());
-        }
-        if (_selectedDate.month == _dataCorrente.month && _selectedDate.year == _dataCorrente.year) {
-          metaStore.addAtual(valor.toInt());
-        }
+        _subAtual(_originalDate, valor);
       } else {
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
         });
-        if (_selectedDate.month == _dataCorrente.month && _selectedDate.year == _dataCorrente.year) {
-          metaStore.addAtual(valor.toInt());
-        }
       }
+      _addAtual(_selectedDate, valor);
       NotificationService().showNotification();
       Navigator.pop(context, novoGasto);
     } else {
@@ -188,5 +181,17 @@ class FormularioGastoState extends State<FormularioGasto> {
           _controladorCampoValor.text.isNotEmpty &&
           _selectedCategoria != null;
     });
+  }
+
+  void _addAtual(DateTime date, double valor) {
+    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
+      metaStore.addAtual(valor.toInt());
+    }
+  }
+
+  void _subAtual(DateTime date, double valor) {
+    if (date.month == _dataCorrente.month && date.year == _dataCorrente.year) {
+      metaStore.subAtual(valor.toInt());
+    }
   }
 }

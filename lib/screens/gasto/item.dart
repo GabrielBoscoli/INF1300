@@ -2,6 +2,7 @@ import 'package:bytebank/models/gasto.dart';
 import 'package:bytebank/screens/gasto/editar_gasto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 class ItemGasto extends StatefulWidget {
   Gasto _gasto;
@@ -18,30 +19,49 @@ class ItemGasto extends StatefulWidget {
 
 class _ItemGastoState extends State<ItemGasto> {
   final DateFormat _formatter = DateFormat('dd-MM-yyyy');
+  final double _leadingWidth = 80;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: const [
-                Icon(
-                  Icons.arrow_circle_down_rounded,
-                  size: 32,
-                  color: Colors.red,
+        leading: widget._gasto.imagePath != null
+            ? SizedBox(
+                width: _leadingWidth,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.teal,
+                      backgroundImage: FileImage(File(widget._gasto.imagePath!)),
+                      radius: 25,
+                    )
+                  ],
                 ),
-                Icon(
-                  Icons.monetization_on_rounded,
-                  size: 32,
+              )
+            : SizedBox(
+                width: _leadingWidth,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.arrow_circle_down_rounded,
+                          size: 32,
+                          color: Colors.red,
+                        ),
+                        Icon(
+                          Icons.monetization_on_rounded,
+                          size: 32,
+                        ),
+                      ],
+                      mainAxisSize: MainAxisSize.min,
+                    ),
+                  ],
                 ),
-              ],
-              mainAxisSize: MainAxisSize.min,
-            ),
-          ],
-        ),
+              ),
         title: Column(
           children: [
             Chip(

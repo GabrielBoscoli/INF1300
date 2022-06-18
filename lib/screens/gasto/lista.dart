@@ -102,17 +102,11 @@ class ListaGastosState extends State<ListaGastos> {
   }
 
   deleteGasto(Gasto gasto) {
-    bool resp = false;
     setState(() {
-      resp = _gastos.remove(gasto);
+      _gastos.remove(gasto);
     });
     if (gasto.data.month == _dataCorrente.month && gasto.data.year == _dataCorrente.year) {
       metaStore.subAtual(gasto.valor.toInt());
-    }
-    if (resp) {
-      debugPrint('gasto removido');
-    } else {
-      debugPrint('gasto não removido');
     }
   }
 

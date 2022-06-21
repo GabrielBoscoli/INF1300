@@ -1,9 +1,11 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/dao/gasto_dao.dart';
+import '../services/firebase_service.dart';
 part 'meta_store.g.dart';
 
 class MetaStore = _MetaStore with _$MetaStore;
@@ -15,6 +17,13 @@ abstract class _MetaStore with Store {
   late final DateTime _dataInicial =
       DateTime(_dataCorrente.year, _dataCorrente.month, 1);
   late final DateTime _dataFinal = DateTime(_dataCorrente.year, _dataCorrente.month + 1, 0);
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+  late String? userId;
+  // nao há necessidade de atualizacao em tempo real. pode ser apenas quando inicializa o meta store.
+  late final int mediaMeta;
+  final String _metaString = 'meta';
+  final String _idString = 'id';
+  FirebaseService fbService = FirebaseService();
 
   @observable
   int meta = 1000;
@@ -28,16 +37,24 @@ abstract class _MetaStore with Store {
 
   @action
   Future<void> loadMeta() async {
-    meta = _prefs.getInt('meta') ?? 0;
+    meta = _prefs.getInt(_metaString) ?? 0;
+    userId = _prefs.getString(_idString);
     double atualDouble = await _gastoDao
         .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal));
+    int media = await fbService.getMediaMeta();
+    if (media >= 0) {
+      mediaMeta = media;
+    }
     atual = atualDouble.toInt();
   }
 
   @action
   Future<void> updateMeta(int meta) async {
+    userId ??= await fbService.createUserId();
+    fbService.updateMeta(userId!, meta, this.meta);
     this.meta = meta;
-    _prefs.setInt('meta', meta);
+    _prefs.setInt(_metaString, meta);
+    _prefs.setString(_idString, userId!);
   }
 
   @action

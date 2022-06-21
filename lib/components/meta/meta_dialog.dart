@@ -15,6 +15,7 @@ class _MetaDialogState extends State<MetaDialog> {
   final TextEditingController _controladorCampoValor = TextEditingController();
   late MetaStore metaStore;
   bool _camposPreenchidos = false;
+  late double? mediaMeta;
 
   @override
   void initState() {
@@ -45,15 +46,16 @@ class _MetaDialogState extends State<MetaDialog> {
             ),
             ElevatedButton(
               child: const Text('Confirmar'),
-              onPressed: _camposPreenchidos ? () => confirmedPressed() : null,
-            )
+              onPressed: _camposPreenchidos ? () => _confirmedPressed() : null,
+            ),
+
           ],
         ),
       ),
     );
   }
 
-  void confirmedPressed() {
+  void _confirmedPressed() {
     debugPrint('confirmedPressed');
     final double? valor =
         double.tryParse(_controladorCampoValor.text.replaceAll(',', '.'));

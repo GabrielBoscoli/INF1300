@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "94889299839",
+    "project_id": "inf-1300",
+    "storage_bucket": "inf-1300.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94889299839:android:c3ffdee10fb28bd7e6144a",
+        "android_client_info": {
+          "package_name": "com.example.bytebank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94889299839-tq37fph5i79s3lajr3emh7vhavglb061.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsFK4UZ6lnaoUfbjIRR342Iclpb89z3eU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94889299839-tq37fph5i79s3lajr3emh7vhavglb061.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,6 +20,7 @@ abstract class _MetaStore with Store {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
   late String? userId;
   // nao há necessidade de atualizacao em tempo real. pode ser apenas quando inicializa o meta store.
+  // -1 se nao conseguir pegar a media do firebase.
   late final int mediaMeta;
   final String _metaString = 'meta';
   final String _idString = 'id';
@@ -41,10 +42,7 @@ abstract class _MetaStore with Store {
     userId = _prefs.getString(_idString);
     double atualDouble = await _gastoDao
         .findTotalByDate(DateTimeRange(start: _dataInicial, end: _dataFinal));
-    int media = await fbService.getMediaMeta();
-    if (media >= 0) {
-      mediaMeta = media;
-    }
+    mediaMeta = await fbService.getMediaMeta();
     atual = atualDouble.toInt();
   }
 

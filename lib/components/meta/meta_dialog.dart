@@ -5,6 +5,7 @@ import '../geral/editor.dart';
 
 class MetaDialog extends StatefulWidget {
   static const String _metaAtual = 'Meta mensal atual: ';
+  static const String _metaMedia = 'Meta media entre usuarios: ';
   static const String _metaNova = 'Meta nova';
 
   @override
@@ -15,7 +16,6 @@ class _MetaDialogState extends State<MetaDialog> {
   final TextEditingController _controladorCampoValor = TextEditingController();
   late MetaStore metaStore;
   bool _camposPreenchidos = false;
-  late double? mediaMeta;
 
   @override
   void initState() {
@@ -36,7 +36,11 @@ class _MetaDialogState extends State<MetaDialog> {
               MetaDialog._metaAtual + metaStore.meta.toString(),
               textAlign: TextAlign.center,
             ),
-            const Padding(padding: EdgeInsets.all(8.0)),
+            Text(
+              metaStore.mediaMeta == -1 ? '' : MetaDialog._metaMedia + metaStore.mediaMeta.toString(),
+              textAlign: TextAlign.center,
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 8.0)),
             Editor(
               _controladorCampoValor,
               MetaDialog._metaNova,
@@ -48,7 +52,6 @@ class _MetaDialogState extends State<MetaDialog> {
               child: const Text('Confirmar'),
               onPressed: _camposPreenchidos ? () => _confirmedPressed() : null,
             ),
-
           ],
         ),
       ),

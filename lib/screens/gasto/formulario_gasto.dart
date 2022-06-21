@@ -14,7 +14,7 @@ import '../../components/geral/editor.dart';
 import '../../stores/meta_store.dart';
 
 class FormularioGasto extends StatefulWidget {
-  final GastoDao _gastoDao = GastoDao();
+  final GastoDao _gastoDao = const GastoDao();
   final Gasto? gasto;
   late final bool edit = gasto == null ? false : true;
 
@@ -48,7 +48,8 @@ class FormularioGastoState extends State<FormularioGasto> {
   late bool _camposPreenchidos = widget.gasto != null ? true : false;
   late String? _imagePath =
       widget.gasto != null ? widget.gasto!.imagePath : null;
-  late MetaStore metaStore;
+  late MetaStore _metaStore;
+  final double _bottomPadding = 8.0;
 
   @override
   void initState() {
@@ -63,7 +64,7 @@ class FormularioGastoState extends State<FormularioGasto> {
 
   @override
   Widget build(BuildContext context) {
-    metaStore = Provider.of<MetaStore>(context);
+    _metaStore = Provider.of<MetaStore>(context);
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -105,11 +106,12 @@ class FormularioGastoState extends State<FormularioGasto> {
             backgroundImage:
                 _imagePath == null ? null : FileImage(File(_imagePath!)),
           ),
-          const Padding(padding: EdgeInsets.only(bottom: 5.0)),
+          Padding(padding: EdgeInsets.only(bottom: _bottomPadding)),
           ElevatedButton(
             child: const Text('Confirmar'),
             onPressed: _camposPreenchidos ? () => _criaGasto(context) : null,
-          )
+          ),
+          Padding(padding: EdgeInsets.only(bottom: _bottomPadding)),
         ],
       ),
     );
@@ -131,13 +133,13 @@ class FormularioGastoState extends State<FormularioGasto> {
       if (widget.edit) {
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
-        metaStore.subAtual(_originalDate, valor.toInt());
+        _metaStore.subAtual(_originalDate, valor.toInt());
       } else {
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
         });
       }
-      metaStore.addAtual(_selectedDate, valor.toInt());
+      _metaStore.addAtual(_selectedDate, valor.toInt());
       NotificationService().showNotification();
       Navigator.pop(context, novoGasto);
     } else {

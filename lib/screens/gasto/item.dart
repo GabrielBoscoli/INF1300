@@ -33,7 +33,8 @@ class _ItemGastoState extends State<ItemGasto> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      // backgroundImage: const AssetImage('assets/loading.jpg'),
+                      backgroundColor: Theme.of(context).cardColor,
+                      backgroundImage: const AssetImage('assets/loading.jpg'),
                       foregroundImage: FileImage(File(widget._gasto.imagePath!)),
                       radius: 25,
                     )

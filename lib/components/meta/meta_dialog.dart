@@ -59,7 +59,6 @@ class _MetaDialogState extends State<MetaDialog> {
   }
 
   void _confirmedPressed() {
-    debugPrint('confirmedPressed');
     final double? valor =
         double.tryParse(_controladorCampoValor.text.replaceAll(',', '.'));
     if (valor != null && valor >= 0) {

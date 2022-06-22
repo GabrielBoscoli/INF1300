@@ -34,7 +34,7 @@ class FormularioGastoState extends State<FormularioGasto> {
   late final TextEditingController _controladorCampoValor = widget.gasto == null
       ? TextEditingController()
       : TextEditingController(text: widget.gasto!.valor.toString());
-  late final double valorOriginal = widget.gasto != null ? widget.gasto!.valor : 0;
+  late final double _valorOriginal = widget.gasto != null ? widget.gasto!.valor : 0;
   late DateTime _selectedDate =
       widget.gasto != null ? widget.gasto!.data : DateTime.now();
   late final DateTime _originalDate =
@@ -133,7 +133,7 @@ class FormularioGastoState extends State<FormularioGasto> {
       if (widget.edit) {
         novoGasto.id = widget.gasto!.id;
         widget._gastoDao.update(novoGasto);
-        _metaStore.subAtual(_originalDate, valor.toInt());
+        _metaStore.subAtual(_originalDate, _valorOriginal.toInt());
       } else {
         widget._gastoDao.save(novoGasto).then((value) {
           novoGasto.id = value;
